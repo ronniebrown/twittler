@@ -9,59 +9,53 @@
   </head>
   <body>
     <header>
-      <h1>Ahhh Tweet Tweet muFka ahhhh tweet tweet got dem</h1>
+      <h1>Ahhh Tweet Tweet</h1>
     </header>
-    <div id="new-tweet">
-      <form id="tweettweet">
-
-        <button>GET TWEETS</button>
-      </form>
-    </div>
-    <div class="main-feed">
-      <ul id="main-feeder">
-        <h2>Main feed</h2>
-      </ul>
-    </div>
-    <div>
-      <ul id="user-feeder">
-      <!--build a user list-->
-        <h2>users</h2>
-        <li>@mracus</li>
-        <li>@shawndrost</li>
-        <li>@douglascalhoun</li>
-        <li>@sharksforcheap</li>  
-      </ul>
-        <aside>
-          <h1>user streams</h1>
-        </aside>
-    </div>
+    
+    
+    
     <script>
+      var interval;
 
       $(document).ready(function(){
-        // var $body = $('body');
-        // $body.html('');
-        // var $user = $('#main-feed');
-
-        var index = streams.home.length - 1;
-        while(index >= 0){
-          var tweet = streams.home[index];
-          var $tweet = $('<li></li>');
-          $tweet.text('@' + tweet.user + ': ' + tweet.message + tweet.created_at);
-          $tweet.appendTo($('#main-feeder'));
-          index -= 1;
-        }
+        var $main = $('.main-feed');
         
-        // display user streams in users list.
-        // write function for username.onclick show user stream append to user-feeder
-        $('tweet.user').on('click', function() {
-          var $feed = $('streams.users');
-          $('#user-feeder').append($feed);
+
+        function tweetRefresher() {
+          clearInterval(interval);
+          interval = setInterval(getTweets, 5000);
+          $main.slideDown('slow');
+        }
+
+        tweetRefresher();
+
+        function getTweets(user) {
+          var index = user ? streams.users[user].length -1 : streams.home.length - 1;
+          while(index >= 0){
+            var tweet = user ? streams.users[user][index] : streams.home[index];
+            var $tweet = $('<div class="each-tweet">' + '<a href="#" class='+ tweet.user +'>' + 
+                    '@' + tweet.user + '</a>:' + tweet.message + tweet.created_at +
+                  '</div>');
+            $tweet.appendTo($main);
+            index -= 1;
+          }
+        }
+        getTweets();
+
+        $main.on('click', 'a', function(e) {
+          e.preventDefault();
+          var user = $(this).attr('class');
+          clearInterval(interval);
+          $('.each-tweet').remove();
+          getTweets(user);
         });
-
-
-
+        
+        
       });
-
     </script>
+
+    <div class="main-feed">
+      
+    </div>
   </body>
 </html>
